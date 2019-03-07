@@ -152,7 +152,7 @@ public class MatrixPlotPublisher extends AbstractPlotPublisher {
                 Plot plot = new Plot(p.title, p.yaxis, p.group, p.numBuilds,
                         p.csvFileName, p.style, p.useDescr, p.getKeepRecords(),
                         p.getExclZero(), p.isLogarithmic(), p.yaxisMinimum, p.yaxisMaximum,
-                        p.description);
+                        p.description, p.getFixBrokenLines());
                 plot.series = p.series;
                 plot.setProject((MatrixConfiguration) build.getProject());
                 addPlot(plot);
