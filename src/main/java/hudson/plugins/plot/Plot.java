@@ -251,6 +251,11 @@ public class Plot implements Comparable<Plot> {
     @SuppressWarnings("visibilitymodifier")
     public String yaxisMaximum;
 
+    /**
+     * Fix broken lines caused by missing series values in some builds.
+     */
+    private boolean fixBrokenLines;
+
     static class Label implements Comparable<Label> {
         private final Integer buildNum;
         private final String buildDate;
@@ -329,7 +334,7 @@ public class Plot implements Comparable<Plot> {
     public Plot(String title, String yaxis, String group, String numBuilds,
                 String csvFileName, String style, boolean useDescr,
                 boolean keepRecords, boolean exclZero, boolean logarithmic,
-                String yaxisMinimum, String yaxisMaximum) {
+                String yaxisMinimum, String yaxisMaximum, boolean fixBrokenLines) {
         this.title = title;
         this.yaxis = yaxis;
         this.group = group;
@@ -342,6 +347,7 @@ public class Plot implements Comparable<Plot> {
         this.logarithmic = logarithmic;
         this.yaxisMinimum = yaxisMinimum;
         this.yaxisMaximum = yaxisMaximum;
+        this.fixBrokenLines = fixBrokenLines;
     }
 
     /**
@@ -351,7 +357,7 @@ public class Plot implements Comparable<Plot> {
     public Plot(String title, String yaxis, String group, String numBuilds,
                 String csvFileName, String style, boolean useDescr) {
         this(title, yaxis, group, numBuilds, csvFileName, style, useDescr,
-                false, false, false, null, null);
+                false, false, false, null, null, false);
     }
 
     // needed for serialization
@@ -384,6 +390,10 @@ public class Plot implements Comparable<Plot> {
 
     public Double getYaxisMaximum() {
         return getDoubleFromString(yaxisMaximum);
+    }
+
+    public boolean getFixBrokenLines() {
+        return fixBrokenLines;
     }
 
     public Double getDoubleFromString(String input) {
@@ -771,6 +781,11 @@ public class Plot implements Comparable<Plot> {
             }
             String rowSeries = record[1];
             dataset.setValue(value, url, rowSeries, columnXLabel);
+        }
+
+        if (fixBrokenLines) {
+            // Check broken lines and fix them if so
+            dataset.sortUp();
         }
 
         String builds = getURLNumBuilds();

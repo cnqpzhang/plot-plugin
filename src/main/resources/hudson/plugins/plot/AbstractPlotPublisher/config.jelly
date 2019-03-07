@@ -55,7 +55,9 @@
         <f:entry title="${%Y-axis maximum}" help="/plugin/plot/help-yaxisMaximum.html">
           <f:textbox name="yaxisMaximum" value="${plot.yaxisMaximum}" />
         </f:entry>
-
+        <f:entry title="${%Fix broken lines with reference to values in former builds}" help="/plugin/plot/help-fixBrokenLines.html">
+          <f:checkbox name="fixBrokenLines" checked="${plot.fixBrokenLines}" />
+        </f:entry>
         <f:entry title="${%Keep records for deleted builds}" help="/plugin/plot/help-keepRecords.html">
           <f:checkbox name="keepRecords" checked="${plot.keepRecords}" />
         </f:entry>

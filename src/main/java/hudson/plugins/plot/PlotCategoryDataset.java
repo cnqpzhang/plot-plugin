@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.AbstractDataset;
 
@@ -236,5 +237,41 @@ public class PlotCategoryDataset extends AbstractDataset implements CategoryData
         // LOGGER.info("columnKeys.size():"+columnKeys.size());
         DataElement element = new DataElement(value, url);
         data.get(rowIndex).put(columnKey, element);
+    }
+
+    /**
+     * Add missed dots in order to fix up broken lines
+     */
+    public void sortUp() {
+        int totalRow = rowKeys.size();
+        int totalColumn = columnKeys.size();
+        if (totalRow < 1 || totalColumn < 2) {
+            // nothing to do
+            return;
+        }
+        for (int i = 0; i < totalRow; i++) {
+            Map<Comparable, DataElement> dots = data.get(i);
+            int numDots = dots.size();
+            if (numDots < 2 || numDots == totalColumn) {
+                // It is necessary to have >=2 dots in order to do fixing-up by former references
+                // If no broken dots, no need to fix
+                continue;
+            }
+            int fixDots = totalColumn - numDots;
+            DataElement last = null;
+            for (int j = 0; j < totalColumn - 1 && fixDots > 0; j++) {
+                Comparable curr = columnKeys.get(j);
+                if (dots.containsKey(curr)) {
+                    // record the latest valid dot as a reference for the coming missed
+                    last = dots.get(curr);
+                } else {
+                    if (last != null) {
+                        // copy and add one missed dots
+                        dots.put(curr, last);
+                    }
+                    fixDots--;
+                }
+            }
+        }
     }
 }

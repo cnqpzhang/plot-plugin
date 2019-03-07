@@ -65,7 +65,10 @@
             <f:entry title="${%Y-axis maximum}" field="yaxisMaximum" help="/plugin/plot/help-yaxisMaximum.html">
                 <f:textbox name="yaxisMaximum" value="${plot.yaxisMaximum}"/>
             </f:entry>
-
+            <f:entry title="${%Fix broken lines with reference to values in former builds}" field="fixBrokenLines"
+                     help="/plugin/plot/help-fixBrokenLines.html">
+                <f:checkbox name="fixBrokenLines" checked="${plot.fixBrokenLines}"/>
+            </f:entry>
             <f:entry title="" description="${%A new data series definition}">
                 <f:repeatableProperty field="csvSeries" add="Add CSV series"/>
             </f:entry>

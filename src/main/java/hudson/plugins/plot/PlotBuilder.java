@@ -56,6 +56,7 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
     private boolean exclZero;
     private boolean logarithmic;
     private boolean keepRecords;
+    private boolean fixBrokenLines;
 
     // Generated?
     @SuppressWarnings("visibilitymodifier")
@@ -173,6 +174,15 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
         this.yaxisMaximum = Util.fixEmptyAndTrim(yaxisMaximum);
     }
 
+    public boolean getFixBrokenLines() {
+        return fixBrokenLines;
+    }
+
+    @DataBoundSetter
+    public void setFixBrokenLines(boolean fixBrokenLines) {
+        this.fixBrokenLines = fixBrokenLines;
+    }
+
     public List<CSVSeries> getCsvSeries() {
         return csvSeries;
     }
@@ -206,7 +216,7 @@ public class PlotBuilder extends Builder implements SimpleBuildStep {
         List<Plot> plots = new ArrayList<>();
         Plot plot = new Plot(title, yaxis, group, numBuilds, csvFileName, style,
                 useDescr, keepRecords, exclZero, logarithmic,
-                yaxisMinimum, yaxisMaximum);
+                yaxisMinimum, yaxisMaximum, fixBrokenLines);
 
         List<Series> series = new ArrayList<>();
         if (csvSeries != null) {
