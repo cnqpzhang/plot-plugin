@@ -7,6 +7,7 @@ package hudson.plugins.plot;
 import au.com.bytecode.opencsv.CSVReader;
 import hudson.model.AbstractProject;
 import hudson.model.Job;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
@@ -286,12 +288,16 @@ public class PlotReport {
                     tableRow.add(StringUtils.EMPTY);
                 }
             }
-            double minY = plot.hasYaxisMinimum() ? plot.getYaxisMinimum() : Double.MAX_VALUE;
+            double minY = plot.hasYaxisMinimum() ? plot.getYaxisMinimum() : Double.MIN_VALUE;
             int lastRow = tableData.size();
-            List<String> tableRowMin = new ArrayList<>(); tableRowMin.add("Min");
-            List<String> tableRowMax = new ArrayList<>(); tableRowMax.add("Max");
-            List<String> tableRowAvg = new ArrayList<>(); tableRowAvg.add("Avg");
-            List<String> tableRowGom = new ArrayList<>(); tableRowGom.add("Gom");
+            List<String> tableRowMin = new ArrayList<>();
+            tableRowMin.add("Min");
+            List<String> tableRowMax = new ArrayList<>();
+            tableRowMax.add("Max");
+            List<String> tableRowAvg = new ArrayList<>();
+            tableRowAvg.add("Avg");
+            List<String> tableRowGom = new ArrayList<>();
+            tableRowGom.add("Gom");
             for (int c = 1; c < lastColumn; c++) {
                 // the first column is buildNumber skip it
                 double min = Double.MAX_VALUE;
@@ -304,7 +310,7 @@ public class PlotReport {
                     String e = tableData.get(r).get(c);
                     if (StringUtils.isNotEmpty(e) && StringUtils.isNumeric(e)) {
                         double v = Double.parseDouble(e);
-                        if (Double.compare(v, minY) < 0) {
+                        if (plot.hasYaxisMinimum() && Double.compare(v, minY) < 0) {
                             // ignore values below minY
                             continue;
                         }
@@ -319,8 +325,20 @@ public class PlotReport {
                 double avg = (cnt > 0) ? (sum / cnt) : 0.f;
                 double gom = (cnt > 0) ? mul : 0.f;
 
-                tableRowMin.add(String.format("%.1f", min));
-                tableRowMax.add(String.format("%.1f", max));
+                if (plot.hasYaxisMinimum() && min == Double.MAX_VALUE) {
+                    tableRowMin.add(String.format("< %.1f", minY));
+                } else {
+                    if (min == Double.MAX_VALUE) {
+                        tableRowMin.add(String.format("N/A"));
+                    } else {
+                        tableRowMin.add(String.format("%.1f", min));
+                    }
+                }
+                if (max == Double.MIN_VALUE) {
+                    tableRowMax.add(String.format("N/A"));
+                } else {
+                    tableRowMax.add(String.format("%.1f", max));
+                }
                 tableRowAvg.add(String.format("%.1f", avg));
                 tableRowGom.add(String.format("%.1f", gom));
             }
