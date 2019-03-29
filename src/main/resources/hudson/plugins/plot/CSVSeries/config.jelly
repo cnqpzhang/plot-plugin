@@ -54,6 +54,11 @@
                 <f:entry title="${%Display original csv above plot}" help="/plugin/plot/help-csv-table.html">
                     <f:checkbox name="displayTableFlag" checked="${series.displayTableFlag}"/>
                 </f:entry>
+
+                <f:entry title="${%Display summary above plot}" help="/plugin/plot/help-csv-table.html">
+                    <f:checkbox name="displaySummaryFlag" checked="${series.displaySummaryFlag}"/>
+                </f:entry>
+
                 <f:entry title="">
                     <div align="right">
                         <f:repeatableDeleteButton/>

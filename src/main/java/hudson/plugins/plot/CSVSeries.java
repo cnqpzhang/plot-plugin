@@ -81,15 +81,17 @@ public class CSVSeries extends Series {
      * Show table of the single values in charts.
      */
     private boolean displayTableFlag;
+    private boolean displaySummaryFlag;
 
     @DataBoundConstructor
     public CSVSeries(String file, String url, String inclusionFlag,
-                     String exclusionValues, boolean displayTableFlag) {
+                     String exclusionValues, boolean displayTableFlag, boolean displaySummaryFlag) {
         super(file, "", "csv");
 
         this.url = url;
         this.displayTableFlag = displayTableFlag;
         this.exclusionValues = exclusionValues;
+        this.displaySummaryFlag = displaySummaryFlag;
 
         if (this.exclusionValues == null) {
             this.inclusionFlag = InclusionFlag.OFF;
@@ -135,6 +137,10 @@ public class CSVSeries extends Series {
 
     public boolean getDisplayTableFlag() {
         return displayTableFlag;
+    }
+
+    public boolean getDisplaySummaryFlag() {
+        return displaySummaryFlag;
     }
 
     /**

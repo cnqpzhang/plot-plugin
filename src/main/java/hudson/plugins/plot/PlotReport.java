@@ -131,6 +131,16 @@ public class PlotReport {
         return false;
     }
 
+    public boolean getDisplaySummaryFlag(int i) {
+        Plot plot = getPlot(i);
+
+        if (CollectionUtils.isNotEmpty(plot.getSeries())) {
+            Series series = plot.getSeries().get(0);
+            return (series instanceof CSVSeries) && ((CSVSeries) series).getDisplaySummaryFlag();
+        }
+        return false;
+    }
+
     // called from PlotReport/index.jelly
     public List<List<String>> getTable(int i) {
         List<List<String>> tableData = new ArrayList<>();
@@ -200,6 +210,137 @@ public class PlotReport {
                     tableRow.add(StringUtils.EMPTY);
                 }
             }
+        } catch (IOException ioe) {
+            LOGGER.log(Level.SEVERE, "Exception reading csv file", ioe);
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    LOGGER.log(Level.INFO, "Failed to close CSV reader", e);
+                }
+            }
+        }
+        return tableData;
+    }
+
+    public List<List<String>> getSummary(int i) {
+        List<List<String>> tableData = new ArrayList<>();
+
+        Plot plot = getPlot(i);
+
+        // load existing csv file
+        File plotFile = new File(project.getRootDir(), plot.getCsvFileName());
+        if (!plotFile.exists()) {
+            return tableData;
+        }
+        CSVReader reader = null;
+        try {
+            reader = new CSVReader(new InputStreamReader(new FileInputStream(plotFile),
+                    Charset.defaultCharset().name()));
+            // throw away 2 header lines
+            reader.readNext();
+            reader.readNext();
+            // array containing header titles
+            List<String> header = new ArrayList<>();
+            header.add("Summary");
+            tableData.add(header);
+            String[] nextLine;
+            while ((nextLine = reader.readNext()) != null) {
+                String buildNumber = nextLine[2];
+                if (!plot.reportBuild(Integer.parseInt(buildNumber))) {
+                    continue;
+                }
+                String seriesLabel = nextLine[1];
+                // index of the column where the value should be located
+                int index = header.lastIndexOf(seriesLabel);
+                if (index <= 0) {
+                    // add header label
+                    index = header.size();
+                    header.add(seriesLabel);
+                }
+                List<String> tableRow = null;
+                for (int j = 1; j < tableData.size(); j++) {
+                    List<String> r = tableData.get(j);
+                    if (StringUtils.equals(r.get(0), buildNumber)) {
+                        // found table row corresponding to the build number
+                        tableRow = r;
+                        break;
+                    }
+                }
+                // table row corresponding to the build number not found
+                if (tableRow == null) {
+                    // create table row with build number at first column
+                    tableRow = new ArrayList<>();
+                    tableRow.add(buildNumber);
+                    tableData.add(tableRow);
+                }
+                // set value at index column
+                String value = nextLine[0];
+                if (index < tableRow.size()) {
+                    tableRow.set(index, value);
+                } else {
+                    for (int j = tableRow.size(); j < index; j++) {
+                        tableRow.add(StringUtils.EMPTY);
+                    }
+                    tableRow.add(value);
+                }
+            }
+            int lastColumn = tableData.get(0).size();
+            for (List<String> tableRow : tableData) {
+                for (int j = tableRow.size(); j < lastColumn; j++) {
+                    tableRow.add(StringUtils.EMPTY);
+                }
+            }
+            double minY = plot.hasYaxisMinimum() ? plot.getYaxisMinimum() : Double.MAX_VALUE;
+            int lastRow = tableData.size();
+            List<String> tableRowMin = new ArrayList<>(); tableRowMin.add("Min");
+            List<String> tableRowMax = new ArrayList<>(); tableRowMax.add("Max");
+            List<String> tableRowAvg = new ArrayList<>(); tableRowAvg.add("Avg");
+            List<String> tableRowGom = new ArrayList<>(); tableRowGom.add("Gom");
+            for (int c = 1; c < lastColumn; c++) {
+                // the first column is buildNumber skip it
+                double min = Double.MAX_VALUE;
+                double max = Double.MIN_VALUE;
+                double sum = 0.f;
+                double mul = 1.f;
+                int cnt = 0;
+                for (int r = 1; r < lastRow; r++) {
+                    // the first row is the head skip it
+                    String e = tableData.get(r).get(c);
+                    if (StringUtils.isNotEmpty(e) && StringUtils.isNumeric(e)) {
+                        double v = Double.parseDouble(e);
+                        if (Double.compare(v, minY) < 0) {
+                            // ignore values below minY
+                            continue;
+                        }
+                        min = Double.compare(v, min) < 0 ? v : min;
+                        max = Double.compare(v, max) > 0 ? v : max;
+                        sum += v;
+
+                        mul = Math.pow(mul, cnt * 1.f / (cnt + 1)) * Math.pow(v, 1.f / (cnt + 1));
+                        cnt += 1;
+                    }
+                }
+                double avg = (cnt > 0) ? (sum / cnt) : 0.f;
+                double gom = (cnt > 0) ? mul : 0.f;
+
+                tableRowMin.add(String.format("%.1f", min));
+                tableRowMax.add(String.format("%.1f", max));
+                tableRowAvg.add(String.format("%.1f", avg));
+                tableRowGom.add(String.format("%.1f", gom));
+            }
+
+            int len = tableData.size();
+            while (len > 1) {
+                tableData.remove(1);
+                len = tableData.size();
+            }
+            tableData.add(tableRowMin);
+            tableData.add(tableRowMax);
+            tableData.add(tableRowAvg);
+            tableData.add(tableRowGom);
+
         } catch (IOException ioe) {
             LOGGER.log(Level.SEVERE, "Exception reading csv file", ioe);
         } finally {

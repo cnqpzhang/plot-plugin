@@ -42,8 +42,10 @@ public class CSVSeriesTest extends SeriesTestCase {
                     null,
                     null,
                     null,
+                    true,
                     true);
             assertTrue(series.getDisplayTableFlag());
+            assertTrue(series.getDisplaySummaryFlag());
         }
     }
 
@@ -96,8 +98,8 @@ public class CSVSeriesTest extends SeriesTestCase {
                     "http://localhost:8080/%name%/%index%/",
                     "INCLUDE_BY_STRING",
                     LAST_COLUMN_NAME[index],
+                    false,
                     false);
-
             LOGGER.info("Created series " + series.toString());
 
             // load the series.
@@ -121,6 +123,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                 "http://localhost:8080/%name%/%index%/",
                 "OFF",
                 "",
+                false,
                 false);
 
         LOGGER.info("Created series " + series.toString());
