@@ -25,8 +25,9 @@ public class CSVSeriesTest extends SeriesTestCase {
     private static final String[] FILES = {"test.csv"};
 
     public void testCSVSeriesWithNullExclusionValuesSetsDisplayTableFlag() {
-        CSVSeries series = new CSVSeries(FILES[0], null, null, null, true);
+        CSVSeries series = new CSVSeries(FILES[0], null, null, null, true, true);
         assertTrue(series.getDisplayTableFlag());
+        assertTrue(series.getDisplaySummaryFlag());
     }
 
     public void testCSVSeriesWithNoExclusions() {
@@ -49,7 +50,7 @@ public class CSVSeriesTest extends SeriesTestCase {
         }
 
         // Create a new CSV series.
-        CSVSeries series = new CSVSeries(FILES[0], "http://localhost:8080/%name%/%index%/", "OFF", "", false);
+        CSVSeries series = new CSVSeries(FILES[0], "http://localhost:8080/%name%/%index%/", "OFF", "", false, false);
 
         LOGGER.info("Created series " + series.toString());
         // test the basic subclass properties.
@@ -77,7 +78,7 @@ public class CSVSeriesTest extends SeriesTestCase {
 
         // Create a new CSV series.
         CSVSeries series = new CSVSeries(file,
-                "http://localhost:8080/%name%/%index%/", "OFF", "", false);
+                "http://localhost:8080/%name%/%index%/", "OFF", "", false, false);
 
         LOGGER.info("Created series " + series.toString());
         // test the basic subclass properties.

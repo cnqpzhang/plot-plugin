@@ -69,14 +69,16 @@ public class CSVSeries extends Series {
     private String url;
 
     private boolean displayTableFlag;
+    private boolean displaySummaryFlag;
 
     @DataBoundConstructor
     public CSVSeries(String file, String url, String inclusionFlag,
-                     String exclusionValues, boolean displayTableFlag) {
+                     String exclusionValues, boolean displayTableFlag, boolean displaySummaryFlag) {
         super(file, "", "csv");
 
         this.url = url;
         this.displayTableFlag = displayTableFlag;
+        this.displaySummaryFlag = displaySummaryFlag;
 
         if (exclusionValues == null) {
             this.inclusionFlag = InclusionFlag.OFF;
@@ -101,6 +103,10 @@ public class CSVSeries extends Series {
 
     public boolean getDisplayTableFlag() {
         return displayTableFlag;
+    }
+
+    public boolean getDisplaySummaryFlag() {
+        return displaySummaryFlag;
     }
 
     /**
