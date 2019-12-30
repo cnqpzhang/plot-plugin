@@ -308,8 +308,13 @@ public class PlotReport {
                 for (int r = 1; r < lastRow; r++) {
                     // the first row is the head skip it
                     String e = tableData.get(r).get(c);
-                    if (StringUtils.isNotEmpty(e) && StringUtils.isNumeric(e)) {
-                        double v = Double.parseDouble(e);
+                    if (StringUtils.isNotEmpty(e)) {
+                        double v = 0.f;
+                        try {
+                            v = Double.parseDouble(e);
+                        } catch (NumberFormatException nfe) {
+                            nfe.printStackTrace();
+                        }
                         if (plot.hasYaxisMinimum() && Double.compare(v, minY) < 0) {
                             // ignore values below minY
                             continue;
@@ -328,17 +333,9 @@ public class PlotReport {
                 if (plot.hasYaxisMinimum() && min == Double.MAX_VALUE) {
                     tableRowMin.add(String.format("< %.1f", minY));
                 } else {
-                    if (min == Double.MAX_VALUE) {
-                        tableRowMin.add(String.format("N/A"));
-                    } else {
-                        tableRowMin.add(String.format("%.1f", min));
-                    }
+                    tableRowMin.add((min == Double.MAX_VALUE) ? "N/A" : String.format("%.1f", min));
                 }
-                if (max == Double.MIN_VALUE) {
-                    tableRowMax.add(String.format("N/A"));
-                } else {
-                    tableRowMax.add(String.format("%.1f", max));
-                }
+                tableRowMax.add((max == Double.MIN_VALUE) ? "N/A" : String.format("%.1f", max));
                 tableRowAvg.add(String.format("%.1f", avg));
                 tableRowGom.add(String.format("%.1f", gom));
             }
