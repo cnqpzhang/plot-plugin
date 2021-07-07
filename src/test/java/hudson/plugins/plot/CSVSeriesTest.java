@@ -68,7 +68,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                     "http://localhost:8080/%name%/%index%/",
                     "OFF",
                     "",
-                    false);
+                    false, false);
 
             LOGGER.info("Created series " + series.toString());
             // test the basic subclass properties.
@@ -98,8 +98,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                     "http://localhost:8080/%name%/%index%/",
                     "INCLUDE_BY_STRING",
                     LAST_COLUMN_NAME[index],
-                    false,
-                    false);
+                    false, false);
             LOGGER.info("Created series " + series.toString());
 
             // load the series.
@@ -123,8 +122,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                 "http://localhost:8080/%name%/%index%/",
                 "OFF",
                 "",
-                false,
-                false);
+                false, false);
 
         LOGGER.info("Created series " + series.toString());
         // test the basic subclass properties.
@@ -148,7 +146,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                 null,
                 "EXCLUDE_BY_STRING",
                 "123,345",
-                false);
+                false, false);
         List<PlotPoint> points = series.loadSeries(workspaceRootDir,
                 0,
                 System.out);
@@ -166,7 +164,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                 null,
                 "INCLUDE_BY_STRING",
                 "123,345",
-                false);
+                false, false);
         List<PlotPoint> points = series.loadSeries(workspaceRootDir,
                 0,
                 System.out);
@@ -184,7 +182,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                 null,
                 "EXCLUDE_BY_STRING",
                 "\"HTTP_[4,5]\\d{2}\",\"Hits\",\"Throughput\",\"RunId\",\"Trend Measurement Type\"",
-                false);
+                false, false);
         List<PlotPoint> points = series.loadSeries(workspaceRootDir,
                 0,
                 System.out);
@@ -202,7 +200,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                 null,
                 "EXCLUDE_BY_STRING",
                 "Avg,(min",
-                false);
+                false, false);
         List<PlotPoint> points = series.loadSeries(workspaceRootDir,
                 0,
                 System.out);
@@ -220,7 +218,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                 null,
                 "INCLUDE_BY_STRING",
                 "\"HTTP_[2,3]\\d{2}\"",
-                false);
+                false, false);
         List<PlotPoint> points = series.loadSeries(workspaceRootDir,
                 0,
                 System.out);
@@ -234,7 +232,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                 null,
                 "INCLUDE_BY_STRING",
                 "\"(HTTP\"",
-                false);
+                false, false);
         List<PlotPoint> points = series.loadSeries(workspaceRootDir,
                 0,
                 System.out);
@@ -252,7 +250,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                 null,
                 "INCLUDE_BY_STRING",
                 "\".*testUser_1\",\".*testUser_2\"",
-                false);
+                false, false);
         List<PlotPoint> points = series.loadSeries(workspaceRootDir,
                 0,
                 System.out);
@@ -272,7 +270,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                 null,
                 "EXCLUDE_BY_STRING",
                 "\"(?i)(RunID)\",\"Login_.*\",\".*testUser_[1-2]{1,2}\"",
-                false);
+                false, false);
         List<PlotPoint> points = series.loadSeries(workspaceRootDir,
                 0,
                 System.out);
@@ -290,7 +288,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                 null,
                 "EXCLUDE_BY_STRING",
                 "\".*min\",\".*max\",\"host\",\"threads\"",
-                false);
+                false, false);
         List<PlotPoint> points = series.loadSeries(workspaceRootDir,
                 0,
                 System.out);
@@ -308,7 +306,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                 null,
                 "INCLUDE_BY_STRING",
                 "\".*avg\"",
-                false);
+                false, false);
         List<PlotPoint> points = series.loadSeries(workspaceRootDir,
                 0,
                 System.out);
@@ -329,7 +327,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                 null,
                 "INCLUDE_BY_STRING",
                 "\"errors\",\".*avg\",\"autoplay count\"",
-                false);
+                false, false);
         List<PlotPoint> points = series.loadSeries(workspaceRootDir,
                 0,
                 System.out);
@@ -350,7 +348,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                 null,
                 "INCLUDE_BY_STRING",
                 "errors,\".*avg\",autoplay count",
-                false);
+                false, false);
         List<PlotPoint> points = series.loadSeries(workspaceRootDir,
                 0,
                 System.out);
@@ -368,7 +366,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                 null,
                 "INCLUDE_BY_STRING",
                 "\".*_(OpenStartPage|Login)_.*\"",
-                false);
+                false, false);
         List<PlotPoint> points = series.loadSeries(workspaceRootDir,
                 0,
                 System.out);
@@ -386,7 +384,7 @@ public class CSVSeriesTest extends SeriesTestCase {
                 null,
                 "INCLUDE_BY_STRING",
                 "Avg,Median",
-                false);
+                false, false);
         List<PlotPoint> points = series.loadSeries(workspaceRootDir,
                 0,
                 System.out);

@@ -340,7 +340,8 @@ public class Plot implements Comparable<Plot> {
     public Plot(String title, String yaxis, String group, String numBuilds,
                 String csvFileName, String style, boolean useDescr,
                 boolean keepRecords, boolean exclZero, boolean logarithmic,
-                String yaxisMinimum, String yaxisMaximum, String description, boolean fixBrokenLines) {
+                String yaxisMinimum, String yaxisMaximum, String description,
+                boolean fixBrokenLines) {
         this.title = title;
         this.yaxis = yaxis;
         this.group = group;

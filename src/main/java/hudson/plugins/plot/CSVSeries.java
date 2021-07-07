@@ -85,7 +85,8 @@ public class CSVSeries extends Series {
 
     @DataBoundConstructor
     public CSVSeries(String file, String url, String inclusionFlag,
-                     String exclusionValues, boolean displayTableFlag, boolean displaySummaryFlag) {
+                     String exclusionValues, boolean displayTableFlag,
+                     boolean displaySummaryFlag) {
         super(file, "", "csv");
 
         this.url = url;
